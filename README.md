@@ -18,6 +18,8 @@ wxpay 提供了以下的方法：
 | Report           | 交易保障        |
 | ShortUrl         | 转换短链接       |
 | AuthCodeToOpenid | 授权码查询openid |
+| Fraud			   | 获取RSA公钥	  |
+|PromotionTransfers| 企业向微信用户个人付款|
 
 * 参数为`Params`类型，返回类型也是`Params`，`Params` 是一个 map[string]string 类型。
 * 方法内部会将参数会转换成含有`appid`、`mch_id`、`nonce_str`、`sign_type`和`sign`的XML；

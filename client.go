@@ -59,10 +59,32 @@ func (c *Client) fillRequestData(params Params) Params {
 	return params
 }
 
-// https no cert post
+func (c *Client) fillBasicRequestData(params Params) Params {
+	params["nonce_str"] = nonceStr()
+	params["sign"] = c.Sign(params)
+	return params
+}
+
+// https no cert post 
 func (c *Client) postWithoutCert(url string, params Params) (string, error) {
 	h := &http.Client{}
 	p := c.fillRequestData(params)
+	response, err := h.Post(url, bodyType, strings.NewReader(MapToXml(p)))
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+	res, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(res), nil
+}
+
+// https no cert post 
+func (c *Client) postWithoutCertNotFill(url string, params Params) (string, error) {
+	h := &http.Client{}
+	p := c.fillBasicRequestData(params)
 	response, err := h.Post(url, bodyType, strings.NewReader(MapToXml(p)))
 	if err != nil {
 		return "", err
@@ -93,6 +115,36 @@ func (c *Client) postWithCert(url string, params Params) (string, error) {
 	}
 	h := &http.Client{Transport: transport}
 	p := c.fillRequestData(params)
+	response, err := h.Post(url, bodyType, strings.NewReader(MapToXml(p)))
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+	res, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(res), nil
+}
+
+// https need cert post
+func (c *Client) postWithCertNotFill(url string, params Params) (string, error) {
+	if c.account.certData == nil {
+		return "", errors.New("证书数据为空")
+	}
+
+	// 将pkcs12证书转成pem
+	cert := pkcs12ToPem(c.account.certData, c.account.mchID)
+
+	config := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+	}
+	transport := &http.Transport{
+		TLSClientConfig:    config,
+		DisableCompression: true,
+	}
+	h := &http.Client{Transport: transport}
+	p := c.fillBasicRequestData(params)
 	response, err := h.Post(url, bodyType, strings.NewReader(MapToXml(p)))
 	if err != nil {
 		return "", err

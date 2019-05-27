@@ -10,6 +10,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"crypto/rsa"
+	"errors"
+	"crypto/x509"
+	"crypto/rand"
 )
 
 func XmlToMap(xmlStr string) Params {
@@ -88,4 +92,33 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 		panic(err)
 	}
 	return cert
+}
+
+// RSA加密
+func RsaEncrypt(origData []byte, pubKey []byte) ([]byte, error) {
+	block, _ := pem.Decode(pubKey)
+	 if block == nil {
+		 return nil, errors.New("public key error")
+	 }
+	 pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
+	 if err != nil {
+		 return nil, err
+	 }
+	 pub := pubInterface.(*rsa.PublicKey)
+	 return rsa.EncryptPKCS1v15(rand.Reader, pub, origData)
+ }
+
+ func RsaDecrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
+    //解密
+    block, _ := pem.Decode(privateKey)
+    if block == nil {
+        return nil, errors.New("private key error!")
+    }
+    //解析PKCS1格式的私钥
+    priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+    if err != nil {
+        return nil, err
+    }
+    // 解密
+    return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
 }

@@ -30,4 +30,10 @@ const (
 	SandboxReportUrl           = "https://api.mch.weixin.qq.com/sandboxnew/payitil/report"
 	SandboxShortUrl            = "https://api.mch.weixin.qq.com/sandboxnew/tools/shorturl"
 	SandboxAuthCodeToOpenidUrl = "https://api.mch.weixin.qq.com/sandboxnew/tools/authcodetoopenid"
+	FraudUrl 				   = "https://fraud.mch.weixin.qq.com/risk/getpublickey"
+	SandboxFraudUrl			   = "https://fraud.mch.weixin.qq.com/sandboxnew/risk/getpublickey"
+	PayToBank				   = "https://api.mch.weixin.qq.com/mmpaysptrans/pay_bank"
+	SandboxPayToBank 		   = "https://api.mch.weixin.qq.com/sandboxnew/mmpaysptrans/pay_bank"
+	PromotionTransfersUrl 	   = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
+	SandboxPromotionTransfersUrl = "https://api.mch.weixin.qq.com/sandboxnew/mmpaymkttransfers/promotion/transfers"
 )
