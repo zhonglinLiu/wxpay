@@ -127,7 +127,11 @@ return wxpay.Notifies{}.OK()
 // 支付或退款返回失败信息
 return wxpay.Notifies{}.NotOK("支付失败或退款失败了")
 
-```
+```cgo
+// RSA加密
+wxpay.RsaEncrypt(origData,pubKey)
+// RSA解密
+wx.RsaEncrypt(ciphertext, privateKey)
 
 ![objcoding](https://raw.githubusercontent.com/objcoding/objcoding.github.io/master/images/official_accounts.jpg)
 
